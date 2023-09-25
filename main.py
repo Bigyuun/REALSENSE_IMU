@@ -1,6 +1,7 @@
 import camera_open
 import imu_read
 
+from datetime import datetime
 import time
 import os
 import pandas as pd
@@ -48,7 +49,9 @@ def create_directory(directory):
     except OSError:
         print("Error: Failed to create the directory.")
 
-IMAGE_DIR = 'datasets/images'
+
+fname = time.strftime("%Y%m%d-%H%M%S")
+IMAGE_DIR = 'datasets/images' + '_' + fname
 CSV_DIR = 'datasets'
 create_directory(IMAGE_DIR)
 
@@ -58,16 +61,17 @@ COUNT_SAVE = 0
 
 df_imu = pd.DataFrame({'file name':[], 'roll':[], 'pitch':[], 'yaw':[]})
 # df_imu.to_csv(CSV_DIR + '/data.csv', index=False)
-while True:
 
+while True:
     # if KEY_COMMAND == 'r':
     try:
-        cv2.imwrite(IMAGE_DIR + '/' + str(COUNT_SAVE) + '.png', camera.color_image)
-        df_imu.loc[COUNT_SAVE] = [str(COUNT_SAVE)+'.png', imu.roll_str, imu.pitch_str, imu.yaw_str]
+        time_str = time.strftime("%Y%m%d-%H%M%S")
+        cv2.imwrite(IMAGE_DIR + '/' + time_str + '_' + str(COUNT_SAVE) + '.png', camera.color_image)
+        df_imu.loc[COUNT_SAVE] = [time_str + '_' + str(COUNT_SAVE)+'.png', imu.roll_str, imu.pitch_str, imu.yaw_str]
         COUNT_SAVE += 1
     except KeyboardInterrupt:
         print("Keyboard Interrupt: Save and Exiting...")
-        df_imu.to_csv(CSV_DIR + '/data.csv', index=False)
+        df_imu.to_csv(CSV_DIR + '/data' + '_' + fname + '.csv', index=False)
 
 
 
