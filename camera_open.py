@@ -22,6 +22,7 @@ class RealSense:
         # self.depth_image = np.zeros((self.image_size['width'], self.image_size['height']), dtype=int)
         # self.color_image = np.zeros((self.image_size['width'], self.image_size['height'], 3), dtype=int)
         self.depth_cm = None
+        self.save_flag = False
 
     def camera_init(self):
         self.cfg.enable_stream(rs.stream.color,
@@ -60,12 +61,13 @@ class RealSense:
             self.color_image = np.asanyarray(self.color_frame.get_data())
             self.depth_cm = cv2.applyColorMap(cv2.convertScaleAbs(self.depth_image, alpha=0.5),
                                          cv2.COLORMAP_JET)
+            self.save_flag = True
 
             gray_image = cv2.cvtColor(self.color_image,
                                       cv2.COLOR_BGR2GRAY)
 
             cv2.imshow('rgb', self.color_image)
-            cv2.imshow('depth', self.depth_cm)
+            # cv2.imshow('depth', self.depth_cm)
 
             if cv2.waitKey(1) == ord('q'):
                 self.pipe.stop()
@@ -84,12 +86,12 @@ class RealSense:
         self.color_image = np.asanyarray(self.color_frame.get_data())
         self.depth_cm = cv2.applyColorMap(cv2.convertScaleAbs(self.depth_image, alpha=0.5),
                                      cv2.COLORMAP_JET)
-
+        self.save_flag = True
         gray_image = cv2.cvtColor(self.color_image,
                                   cv2.COLOR_BGR2GRAY)
 
         cv2.imshow('rgb', self.color_image)
-        cv2.imshow('depth', self.depth_cm)
+        # cv2.imshow('depth', self.depth_cm)
 
         if cv2.waitKey(1) == ord('q'):
             self.pipe.stop()

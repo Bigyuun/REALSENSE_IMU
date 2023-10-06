@@ -66,9 +66,11 @@ while True:
     # if KEY_COMMAND == 'r':
     try:
         time_str = time.strftime("%Y%m%d-%H%M%S")
-        cv2.imwrite(IMAGE_DIR + '/' + time_str + '_' + str(COUNT_SAVE) + '.png', camera.color_image)
-        df_imu.loc[COUNT_SAVE] = [time_str + '_' + str(COUNT_SAVE)+'.png', imu.roll_str, imu.pitch_str, imu.yaw_str]
-        COUNT_SAVE += 1
+        if camera.save_flag == True:
+            cv2.imwrite(IMAGE_DIR + '/' + time_str + '_' + str(COUNT_SAVE) + '.png', camera.color_image)
+            camera.save_flag = False
+            df_imu.loc[COUNT_SAVE] = [time_str + '_' + str(COUNT_SAVE)+'.png', imu.roll_str, imu.pitch_str, imu.yaw_str]
+            COUNT_SAVE += 1
     except KeyboardInterrupt:
         print("Keyboard Interrupt: Save and Exiting...")
         df_imu.to_csv(CSV_DIR + '/data' + '_' + fname + '.csv', index=False)

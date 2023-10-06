@@ -12,7 +12,7 @@ class IMURead:
         self.offset_x = 0
         self.offset_y = 0
         self.offset_z = 0
-        self.serial = serial.Serial('COM5', 921600)
+        self.serial = serial.Serial('COM4', 921600)
         self.E2boxCommand = {'start': '<start>'.encode(),
                              'stop': '<stop>'.encode()}
 
@@ -58,8 +58,11 @@ class IMURead:
                 sensor_data = buf.decode()
                 eular = sensor_data.split(',')
                 self.roll = float(eular[1]) - self.offset_x
-                self.pitch = float(eular[2]) - self.offset_y
-                self.yaw = float(eular[3]) - self.offset_z
+                self.pitch = -1. * (float(eular[2]) - self.offset_y) - 90
+                self.yaw = -1. * (float(eular[3]) - self.offset_z)
+                if self.yaw > 180.0:
+                    self.yaw = self.yaw - 360.0
+
                 self.roll_str = str(self.roll)
                 self.pitch_str = str(self.pitch)
                 self.yaw_str = str(self.yaw)
@@ -82,8 +85,11 @@ class IMURead:
             sensor_data = buf.decode()
             eular = sensor_data.split(',')
             self.roll = float(eular[1]) - self.offset_x
-            self.pitch = float(eular[2]) - self.offset_y
-            self.yaw = float(eular[3]) - self.offset_z
+            self.pitch = -1. * (float(eular[2]) - self.offset_y) - 90
+            self.yaw = -1. * (float(eular[3]) - self.offset_z)
+            if self.yaw > 180.0:
+                self.yaw = self.yaw - 360.0
+
             self.roll_str = str(self.roll)
             self.pitch_str = str(self.pitch)
             self.yaw_str = str(self.yaw)
