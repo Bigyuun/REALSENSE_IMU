@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-
+import time
 # 카메라 매트릭스와 왜곡 계수 (카메라 캘리브레이션 결과에서 얻은 값으로 대체하세요)
 # rms = 0.575244
 P480 = {'fx': 528.471687,
@@ -62,6 +62,9 @@ width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
 height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 fps = cap.get(cv2.CAP_PROP_FPS)
 print(width, height, fps)
+
+
+COUNT_SAVE = 0
 while cap.isOpened():
     ret, frame = cap.read()
     if not ret:
@@ -81,6 +84,10 @@ while cap.isOpened():
     cv2.imshow('ROI Undistorted Frame', roi_undistorted_frame)
     cv2.imshow('ROI Undistorted Frame2', roi_undistorted_frame2)
 
+    time_str = time.strftime("%Y%m%d-%H%M%S")
+    cv2.imwrite('capture/640x480' + '/' + time_str + '_' + str(COUNT_SAVE) + '.png', roi_undistorted_frame)
+    cv2.imwrite('capture/1000x480' + '/' + time_str + '_' + str(COUNT_SAVE) + '.png', roi_undistorted_frame2)
+    COUNT_SAVE += 1
     if cv2.waitKey(1) & 0xFF == 27:  # 'Esc' 키를 누르면 종료
         break
 
